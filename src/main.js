@@ -7,6 +7,7 @@ import { PRESETS, TRAFFIC_MIX } from './vehicles.js';
 import { createDebugPanel, isTyping } from './debug.js';
 import { SteerAssist, BrakeAssist } from './assist.js';
 import { Horn } from './horn.js';
+import { TouchControls } from './touch.js';
 import { Junctions, freeAgent, boxAt, nodeKey, axisOf, STOP_LINE, heldByRules } from './junctions.js';
 import { SpatialGrid } from './spatial.js';
 import { Violations } from './violations.js';
@@ -16,7 +17,7 @@ const ctx = canvas.getContext('2d');
 const hud = document.getElementById('hud');
 
 const STEP = 1 / 120;
-const TRAFFIC = 14;
+const TRAFFIC = 30;
 const MAX_TRAFFIC = 200;
 const NEAR = 40; // m: how far an AI driver looks for other traffic
 // AI drivers re-think every AI_EVERY physics steps (30 times a second),
@@ -122,11 +123,23 @@ addEventListener('blur', () => { keys.clear(); horn.stop(); });
 
 const held = (...codes) => codes.some((c) => keys.has(c));
 const brakeAssist = new BrakeAssist();
-const playerControls = (dt) => brakeAssist.apply(player, {
-    throttle: (held('ArrowUp', 'KeyW') ? 1 : 0) - (held('ArrowDown', 'KeyS') ? 1 : 0),
-    steer: (held('ArrowLeft', 'KeyA') ? 1 : 0) - (held('ArrowRight', 'KeyD') ? 1 : 0),
-    handbrake: held('Space'),
-}, dt);
+const touch = new TouchControls({
+    toggleSignal: (which) => toggleSignal(which),
+    getSignal: () => player.signal,
+    hornStart: () => horn.start(),
+    hornStop: () => horn.stop(),
+});
+// Keyboard and touch together: keys win when pressed, otherwise the touch controls.
+const playerControls = (dt) => {
+    const t = touch.state;
+    const keyThrottle = (held('ArrowUp', 'KeyW') ? 1 : 0) - (held('ArrowDown', 'KeyS') ? 1 : 0);
+    const keySteer = (held('ArrowLeft', 'KeyA') ? 1 : 0) - (held('ArrowRight', 'KeyD') ? 1 : 0);
+    return brakeAssist.apply(player, {
+        throttle: keyThrottle || t.throttle - t.brake,
+        steer: keySteer || t.steer,
+        handbrake: held('Space') || t.handbrake,
+    }, dt);
+};
 const PARKED = { throttle: 0, steer: 0, handbrake: true };
 
 // Jump into the nearest other car (it stops being AI-driven).
@@ -193,8 +206,8 @@ function tick(dt) {
     violations.update(dt, cars, agents, player, isAI);
     grid.rebuild(dynamics);
     stepNo++;
-    player.flashHold = held('KeyR');
-    player.honking = held('KeyH');
+    player.flashHold = held('KeyR') || touch.state.flash;
+    player.honking = held('KeyH') || touch.state.horn;
     for (const car of cars) {
         const driver = drivers.get(car);
         let controls;
@@ -432,11 +445,6 @@ function drawCar(car) {
             ctx.fillRect(-x + 0.4, -y + 0.25, 0.4, 2 * y - 0.5);
     }
     drawCarLights(car, x, y);
-    if (car === player) {
-        ctx.strokeStyle = '#fff';
-        ctx.lineWidth = 0.12;
-        ctx.strokeRect(-x - 0.25, -y - 0.25, 2 * x + 0.5, 2 * y + 0.5);
-    }
     ctx.restore();
 }
 
@@ -541,13 +549,15 @@ function draw(frameDt) {
 
     const fwd = dot(b.vel, fromAngle(b.angle));
     const msg = violations.lastForPlayer && junctions.t - violations.lastForPlayer.t < 4 ? `\n⚠ ${violations.lastForPlayer.text}` : '';
+    const lights = (player.signal ? `   ● ${player.signal === 'hazard' ? 'HAZARDS' : player.signal.toUpperCase() + ' indicator'}` : '') +
+        (player.honking ? '   📯 HONK' : '');
+    // On touch screens the keyboard help just gets in the way.
+    if (touch.active) { hud.textContent = `${(speed * 3.6).toFixed(0)} km/h` + lights + msg; return; }
     hud.textContent =
         `speed ${(speed * 3.6).toFixed(0)} km/h  (fwd ${fwd.toFixed(1)} m/s)   cars ${cars.length}  crates ${crates.length}\n` +
         `[W/S ↑/↓] throttle/brake  [A/D ←/→] steer  [Space] handbrake  [F] take nearest car  ` +
         `[X] speed zoom ${options.speedZoom ? 'on' : 'off'}  [Z] steer assist ${options.assist ? (assist.active ? 'ON ●' : 'on') : 'off'}  [\`] debug\n` +
-        `[Q/E] indicators  [Tab] hazards  [H] horn  [R] flash headlights` +
-        (player.signal ? `   ● ${player.signal === 'hazard' ? 'HAZARDS' : player.signal.toUpperCase() + ' indicator'}` : '') +
-        (player.honking ? '   📯 HONK' : '') + msg;
+        `[Q/E] indicators  [Tab] hazards  [H] horn  [R] flash headlights` + lights + msg;
 }
 
 // ---------- fixed-step loop ----------

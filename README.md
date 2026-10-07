@@ -37,6 +37,11 @@ then open <http://localhost:5173>.
 | X | speed zoom |
 | ` | debug menu (traffic, vehicle tuning, JSON presets) |
 
+On phones and tablets, on-screen controls appear on the first touch: a
+steering wheel (its hub is the horn), gas, brake (hold to reverse) and
+handbrake, plus indicators, hazards and a headlight-flash button. Add
+`?touch=1` to the URL to show them on a desktop.
+
 ## Code
 
 - `src/car.js`, `src/body.js` – car and rigid-body physics
