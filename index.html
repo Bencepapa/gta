@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GTA Car Physics</title>
+    <style>
+        html, body { margin: 0; height: 100%; overflow: hidden; background: #14171c; }
+        canvas { display: block; width: 100vw; height: 100vh; }
+        #hud {
+            position: fixed; left: 12px; top: 10px; margin: 0;
+            font: 12px/1.5 ui-monospace, Consolas, monospace; color: #cfd6df;
+            white-space: pre; pointer-events: none;
+        }
+
+        /* ---------- debug menu ---------- */
+        #debug-toggle {
+            position: fixed; top: 10px; right: 12px; z-index: 2;
+            width: 40px; height: 40px; padding: 10px 9px; border: 0; border-radius: 8px;
+            display: flex; flex-direction: column; justify-content: space-between;
+            background: rgba(20, 23, 28, 0.7); cursor: pointer;
+        }
+        #debug-toggle span { display: block; height: 2px; background: #cfd6df; border-radius: 1px; transition: transform .2s, opacity .2s; }
+        #debug-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
+        #debug-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+        #debug-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
+        #debug-toggle:focus-visible { outline: 2px solid #8ce6c5; }
+
+        #debug-panel {
+            position: fixed; top: 0; right: 0; bottom: 0; z-index: 1;
+            width: min(380px, 100vw); box-sizing: border-box; padding: 56px 16px 24px;
+            overflow-y: auto; overscroll-behavior: contain;
+            background: rgba(14, 17, 22, 0.72);
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            border-left: 1px solid rgba(255, 255, 255, 0.08);
+            font: 12px/1.4 system-ui, sans-serif; color: #dfe5ec;
+            scrollbar-width: thin; scrollbar-color: #444b55 transparent;
+        }
+        #debug-panel[hidden] { display: none; }
+        #debug-panel h2 { margin: 0 0 8px; font-size: 15px; position: absolute; top: 18px; left: 16px; }
+        #debug-panel h3 { margin: 14px 0 6px; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: #8ce6c5; }
+        #debug-panel section { border-top: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 6px; }
+        #debug-panel .row { display: grid; grid-template-columns: 112px 1fr 64px; gap: 8px; align-items: center; margin: 4px 0; }
+        #debug-panel .row.check { grid-template-columns: auto 1fr; }
+        #debug-panel .lbl small { color: #8a94a1; }
+        #debug-panel input[type=range] { width: 100%; accent-color: #8ce6c5; margin: 0; }
+        #debug-panel input[type=number], #debug-panel input[type=text], #debug-panel select, #debug-panel textarea {
+            box-sizing: border-box; width: 100%; padding: 3px 5px; border-radius: 4px;
+            border: 1px solid #3b424c; background: rgba(0, 0, 0, 0.35); color: inherit; font: inherit;
+        }
+        #debug-panel textarea { font: 11px/1.35 ui-monospace, Consolas, monospace; resize: vertical; }
+        #debug-panel input[type=color] { width: 40px; height: 26px; padding: 0; border: 0; background: none; }
+        #debug-panel .btns { display: flex; gap: 6px; margin: 6px 0; align-items: center; }
+        #debug-panel .btns > select, #debug-panel .btns > input[type=text] { flex: 1; }
+        #debug-panel button {
+            padding: 4px 10px; border-radius: 4px; border: 1px solid #4a525d;
+            background: #262c34; color: inherit; font: inherit; cursor: pointer; white-space: nowrap;
+        }
+        #debug-panel button:hover { background: #313843; }
+        #debug-panel .stats { margin: 4px 0 2px; color: #aab4c0; font-variant-numeric: tabular-nums; }
+        #debug-panel .legend { list-style: none; margin: 4px 0 0; padding: 0; color: #aab4c0; font-size: 11px; }
+        #debug-panel .legend li { position: relative; padding-left: 14px; margin: 2px 0; }
+        #debug-panel .legend li::before { content: ''; position: absolute; left: 0; top: 4px; width: 7px; height: 7px; background: var(--c); }
+        #debug-panel .status { color: #8ce6c5; min-height: 1.4em; display: block; }
+    </style>
+</head>
+<body>
+    <canvas id="view"></canvas>
+    <pre id="hud"></pre>
+    <script type="module" src="src/main.js"></script>
+</body>
+</html>
