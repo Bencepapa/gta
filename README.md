@@ -10,7 +10,9 @@ damper, weak along the wheel and strong sideways. See his write-up and
 recreation at <https://patkerr.co.uk/2d-vehicles/>. This is an independent
 reimplementation, not affiliated with Rockstar Games, Take-Two or Pat Kerr.
 
-## Run
+**▶ Play online: <https://bencepapa.github.io/gta/>**
+
+## Run locally
 
 ES modules need a web server (opening `index.html` directly fails):
 
