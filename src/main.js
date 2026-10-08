@@ -294,6 +294,13 @@ addEventListener('resize', resize);
 resize();
 
 let zoom = 16;
+// Zoom is in screen pixels per metre, so small screens would show very
+// little of the city: scale it by the screen's short side (full zoom from
+// ~750 px up), and a bit more when the touch controls cover the edges.
+function screenZoom() {
+    const short = Math.min(innerWidth, innerHeight);
+    return Math.max(0.4, Math.min(1, short / 750)) * (touch.active ? 0.85 : 1);
+}
 const cam = { ...player.body.pos };
 
 function box(e, fill, stroke, lw = 0.08) {
@@ -559,7 +566,7 @@ function drawAILabels(W, H, s, visible) {
 function draw(frameDt) {
     const b = player.body;
     const speed = len(b.vel);
-    const targetZoom = options.speedZoom ? 20 / (1 + speed * 0.03) : 16;
+    const targetZoom = (options.speedZoom ? 20 / (1 + speed * 0.03) : 16) * screenZoom();
     zoom += (targetZoom - zoom) * Math.min(1, frameDt * 3);
     const target = add(b.pos, mul(b.vel, 0.3));
     cam.x += (target.x - cam.x) * Math.min(1, frameDt * 6);
