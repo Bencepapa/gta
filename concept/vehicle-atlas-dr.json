@@ -1,0 +1,2332 @@
+{
+ "version": 1,
+ "atlas": "vehicle-atlas-dr.webp",
+ "size": [
+  1280,
+  853
+ ],
+ "types": {
+  "classic": {
+   "name": "Classic",
+   "kind": "car",
+   "length": 4,
+   "width": 2,
+   "wheelbase": 2.7,
+   "track": 1.4
+  },
+  "sport": {
+   "name": "Sports car",
+   "kind": "car",
+   "length": 4.3,
+   "width": 1.95,
+   "wheelbase": 2.6,
+   "track": 1.6
+  },
+  "sedan": {
+   "name": "Saloon",
+   "kind": "car",
+   "length": 4.6,
+   "width": 1.9,
+   "wheelbase": 2.75,
+   "track": 1.55
+  },
+  "wagon": {
+   "name": "Family wagon",
+   "kind": "car",
+   "length": 4.9,
+   "width": 1.95,
+   "wheelbase": 2.85,
+   "track": 1.55
+  },
+  "van": {
+   "name": "Van",
+   "kind": "van",
+   "length": 5.4,
+   "width": 2.1,
+   "wheelbase": 3.3,
+   "track": 1.7
+  },
+  "bus": {
+   "name": "Bus",
+   "kind": "bus",
+   "length": 11.5,
+   "width": 2.55,
+   "wheelbase": 6.4,
+   "track": 2.05
+  },
+  "lorry": {
+   "name": "Lorry",
+   "kind": "lorry",
+   "length": 9,
+   "width": 2.5,
+   "wheelbase": 5.2,
+   "track": 2
+  },
+  "tractor": {
+   "name": "Nyerges vontat\u00f3",
+   "kind": "tractor",
+   "length": 6.2,
+   "width": 2.5,
+   "wheelbase": 3.8,
+   "track": 2.05,
+   "axles": [
+    1.9,
+    -1.9
+   ],
+   "coupling": -1.4
+  },
+  "trailer": {
+   "name": "F\u00e9lp\u00f3tkocsi",
+   "kind": "trailer",
+   "length": 13.6,
+   "width": 2.55,
+   "track": 2.05,
+   "axles": [
+    -3.9,
+    -5.2,
+    -6.5
+   ],
+   "coupling": 5.4
+  },
+  "sedan-2": {
+   "name": "Sedan",
+   "kind": "car",
+   "length": 4.6,
+   "width": 1.9,
+   "wheelbase": 2.6,
+   "track": 1.8
+  }
+ },
+ "sprites": [
+  {
+   "id": "s1",
+   "x": 30,
+   "y": 24,
+   "w": 53,
+   "h": 100,
+   "front": "up",
+   "type": "sedan-2",
+   "lights": [
+    {
+     "kind": "head",
+     "side": "L",
+     "u": 0.419,
+     "v": 0.311
+    },
+    {
+     "kind": "head",
+     "side": "R",
+     "u": 0.419,
+     "v": -0.311
+    },
+    {
+     "kind": "indicatorFront",
+     "side": "L",
+     "u": 0.394,
+     "v": 0.356
+    },
+    {
+     "kind": "indicatorFront",
+     "side": "R",
+     "u": 0.394,
+     "v": -0.356
+    },
+    {
+     "kind": "indicatorRear",
+     "side": "L",
+     "u": -0.379,
+     "v": 0.348
+    },
+    {
+     "kind": "indicatorRear",
+     "side": "R",
+     "u": -0.379,
+     "v": -0.348
+    },
+    {
+     "kind": "brake",
+     "side": "L",
+     "u": -0.398,
+     "v": 0.322
+    },
+    {
+     "kind": "brake",
+     "side": "R",
+     "u": -0.398,
+     "v": -0.322
+    },
+    {
+     "kind": "reverse",
+     "side": "L",
+     "u": -0.418,
+     "v": 0.27
+    },
+    {
+     "kind": "reverse",
+     "side": "R",
+     "u": -0.418,
+     "v": -0.27
+    }
+   ]
+  },
+  {
+   "id": "s2",
+   "x": 94,
+   "y": 22,
+   "w": 52,
+   "h": 101,
+   "front": "up",
+   "type": "sedan-2",
+   "lights": [
+    {
+     "kind": "head",
+     "side": "L",
+     "u": 0.419,
+     "v": 0.311
+    },
+    {
+     "kind": "head",
+     "side": "R",
+     "u": 0.419,
+     "v": -0.311
+    },
+    {
+     "kind": "indicatorFront",
+     "side": "L",
+     "u": 0.394,
+     "v": 0.356
+    },
+    {
+     "kind": "indicatorFront",
+     "side": "R",
+     "u": 0.394,
+     "v": -0.356
+    },
+    {
+     "kind": "indicatorRear",
+     "side": "L",
+     "u": -0.383,
+     "v": 0.384
+    },
+    {
+     "kind": "indicatorRear",
+     "side": "R",
+     "u": -0.383,
+     "v": -0.384
+    },
+    {
+     "kind": "brake",
+     "side": "L",
+     "u": -0.41,
+     "v": 0.348
+    },
+    {
+     "kind": "brake",
+     "side": "R",
+     "u": -0.41,
+     "v": -0.348
+    },
+    {
+     "kind": "reverse",
+     "side": "L",
+     "u": -0.428,
+     "v": 0.286
+    },
+    {
+     "kind": "reverse",
+     "side": "R",
+     "u": -0.428,
+     "v": -0.286
+    }
+   ]
+  },
+  {
+   "id": "s3",
+   "x": 158,
+   "y": 23,
+   "w": 49,
+   "h": 101,
+   "front": "up",
+   "type": "sedan-2",
+   "lights": [
+    {
+     "kind": "head",
+     "side": "L",
+     "u": 0.419,
+     "v": 0.311
+    },
+    {
+     "kind": "head",
+     "side": "R",
+     "u": 0.419,
+     "v": -0.311
+    },
+    {
+     "kind": "indicatorFront",
+     "side": "L",
+     "u": 0.394,
+     "v": 0.356
+    },
+    {
+     "kind": "indicatorFront",
+     "side": "R",
+     "u": 0.394,
+     "v": -0.356
+    },
+    {
+     "kind": "indicatorRear",
+     "side": "L",
+     "u": -0.381,
+     "v": 0.422
+    },
+    {
+     "kind": "indicatorRear",
+     "side": "R",
+     "u": -0.381,
+     "v": -0.422
+    },
+    {
+     "kind": "brake",
+     "side": "L",
+     "u": -0.404,
+     "v": 0.35
+    },
+    {
+     "kind": "brake",
+     "side": "R",
+     "u": -0.404,
+     "v": -0.35
+    },
+    {
+     "kind": "reverse",
+     "side": "L",
+     "u": -0.418,
+     "v": 0.27
+    },
+    {
+     "kind": "reverse",
+     "side": "R",
+     "u": -0.418,
+     "v": -0.27
+    }
+   ]
+  },
+  {
+   "id": "s4",
+   "x": 220,
+   "y": 22,
+   "w": 54,
+   "h": 102,
+   "front": "up",
+   "type": "sedan-2",
+   "lights": [
+    {
+     "kind": "head",
+     "side": "L",
+     "u": 0.43,
+     "v": 0.331
+    },
+    {
+     "kind": "head",
+     "side": "R",
+     "u": 0.43,
+     "v": -0.331
+    },
+    {
+     "kind": "indicatorFront",
+     "side": "L",
+     "u": 0.411,
+     "v": 0.367
+    },
+    {
+     "kind": "indicatorFront",
+     "side": "R",
+     "u": 0.411,
+     "v": -0.367
+    },
+    {
+     "kind": "indicatorRear",
+     "side": "L",
+     "u": -0.394,
+     "v": 0.379
+    },
+    {
+     "kind": "indicatorRear",
+     "side": "R",
+     "u": -0.394,
+     "v": -0.379
+    },
+    {
+     "kind": "brake",
+     "side": "L",
+     "u": -0.409,
+     "v": 0.328
+    },
+    {
+     "kind": "brake",
+     "side": "R",
+     "u": -0.409,
+     "v": -0.328
+    },
+    {
+     "kind": "reverse",
+     "side": "L",
+     "u": -0.418,
+     "v": 0.27
+    },
+    {
+     "kind": "reverse",
+     "side": "R",
+     "u": -0.418,
+     "v": -0.27
+    }
+   ]
+  },
+  {
+   "id": "s5",
+   "x": 288,
+   "y": 17,
+   "w": 51,
+   "h": 107,
+   "front": "up",
+   "type": "sedan-2",
+   "lights": [
+    {
+     "kind": "head",
+     "side": "L",
+     "u": 0.419,
+     "v": 0.311
+    },
+    {
+     "kind": "head",
+     "side": "R",
+     "u": 0.419,
+     "v": -0.311
+    },
+    {
+     "kind": "indicatorFront",
+     "side": "L",
+     "u": 0.386,
+     "v": 0.341
+    },
+    {
+     "kind": "indicatorFront",
+     "side": "R",
+     "u": 0.386,
+     "v": -0.341
+    },
+    {
+     "kind": "indicatorRear",
+     "side": "L",
+     "u": -0.379,
+     "v": 0.348
+    },
+    {
+     "kind": "indicatorRear",
+     "side": "R",
+     "u": -0.379,
+     "v": -0.348
+    },
+    {
+     "kind": "brake",
+     "side": "L",
+     "u": -0.398,
+     "v": 0.322
+    },
+    {
+     "kind": "brake",
+     "side": "R",
+     "u": -0.398,
+     "v": -0.322
+    },
+    {
+     "kind": "reverse",
+     "side": "L",
+     "u": -0.418,
+     "v": 0.27
+    },
+    {
+     "kind": "reverse",
+     "side": "R",
+     "u": -0.418,
+     "v": -0.27
+    }
+   ]
+  },
+  {
+   "id": "s6",
+   "x": 350,
+   "y": 23,
+   "w": 51,
+   "h": 101,
+   "front": "up",
+   "type": "sedan-2",
+   "lights": [
+    {
+     "kind": "head",
+     "side": "L",
+     "u": 0.428,
+     "v": 0.323
+    },
+    {
+     "kind": "head",
+     "side": "R",
+     "u": 0.428,
+     "v": -0.323
+    },
+    {
+     "kind": "indicatorFront",
+     "side": "L",
+     "u": 0.394,
+     "v": 0.356
+    },
+    {
+     "kind": "indicatorFront",
+     "side": "R",
+     "u": 0.394,
+     "v": -0.356
+    },
+    {
+     "kind": "indicatorRear",
+     "side": "L",
+     "u": -0.396,
+     "v": 0.399
+    },
+    {
+     "kind": "indicatorRear",
+     "side": "R",
+     "u": -0.396,
+     "v": -0.399
+    },
+    {
+     "kind": "brake",
+     "side": "L",
+     "u": -0.418,
+     "v": 0.326
+    },
+    {
+     "kind": "brake",
+     "side": "R",
+     "u": -0.418,
+     "v": -0.326
+    },
+    {
+     "kind": "reverse",
+     "side": "L",
+     "u": -0.436,
+     "v": 0.269
+    },
+    {
+     "kind": "reverse",
+     "side": "R",
+     "u": -0.436,
+     "v": -0.269
+    }
+   ]
+  },
+  {
+   "id": "s7",
+   "x": 414,
+   "y": 21,
+   "w": 52,
+   "h": 103,
+   "front": "up",
+   "type": "sedan-2",
+   "lights": [
+    {
+     "kind": "head",
+     "side": "L",
+     "u": 0.419,
+     "v": 0.311
+    },
+    {
+     "kind": "head",
+     "side": "R",
+     "u": 0.419,
+     "v": -0.311
+    },
+    {
+     "kind": "indicatorFront",
+     "side": "L",
+     "u": 0.394,
+     "v": 0.356
+    },
+    {
+     "kind": "indicatorFront",
+     "side": "R",
+     "u": 0.394,
+     "v": -0.356
+    },
+    {
+     "kind": "indicatorRear",
+     "side": "L",
+     "u": -0.382,
+     "v": 0.37
+    },
+    {
+     "kind": "indicatorRear",
+     "side": "R",
+     "u": -0.382,
+     "v": -0.37
+    },
+    {
+     "kind": "brake",
+     "side": "L",
+     "u": -0.398,
+     "v": 0.322
+    },
+    {
+     "kind": "brake",
+     "side": "R",
+     "u": -0.398,
+     "v": -0.322
+    },
+    {
+     "kind": "reverse",
+     "side": "L",
+     "u": -0.418,
+     "v": 0.27
+    },
+    {
+     "kind": "reverse",
+     "side": "R",
+     "u": -0.418,
+     "v": -0.27
+    }
+   ]
+  },
+  {
+   "id": "s8",
+   "x": 480,
+   "y": 21,
+   "w": 52,
+   "h": 104,
+   "front": "up",
+   "type": "sedan-2",
+   "lights": [
+    {
+     "kind": "head",
+     "side": "L",
+     "u": 0.419,
+     "v": 0.311
+    },
+    {
+     "kind": "head",
+     "side": "R",
+     "u": 0.419,
+     "v": -0.311
+    },
+    {
+     "kind": "indicatorFront",
+     "side": "L",
+     "u": 0.394,
+     "v": 0.356
+    },
+    {
+     "kind": "indicatorFront",
+     "side": "R",
+     "u": 0.394,
+     "v": -0.356
+    },
+    {
+     "kind": "indicatorRear",
+     "side": "L",
+     "u": -0.377,
+     "v": 0.377
+    },
+    {
+     "kind": "indicatorRear",
+     "side": "R",
+     "u": -0.377,
+     "v": -0.377
+    },
+    {
+     "kind": "brake",
+     "side": "L",
+     "u": -0.398,
+     "v": 0.322
+    },
+    {
+     "kind": "brake",
+     "side": "R",
+     "u": -0.398,
+     "v": -0.322
+    },
+    {
+     "kind": "reverse",
+     "side": "L",
+     "u": -0.418,
+     "v": 0.27
+    },
+    {
+     "kind": "reverse",
+     "side": "R",
+     "u": -0.418,
+     "v": -0.27
+    }
+   ]
+  },
+  {
+   "id": "s9",
+   "x": 546,
+   "y": 23,
+   "w": 51,
+   "h": 101,
+   "front": "up",
+   "type": "sedan-2",
+   "lights": [
+    {
+     "kind": "head",
+     "side": "L",
+     "u": 0.431,
+     "v": 0.326
+    },
+    {
+     "kind": "head",
+     "side": "R",
+     "u": 0.431,
+     "v": -0.326
+    },
+    {
+     "kind": "indicatorFront",
+     "side": "L",
+     "u": 0.407,
+     "v": 0.367
+    },
+    {
+     "kind": "indicatorFront",
+     "side": "R",
+     "u": 0.407,
+     "v": -0.367
+    },
+    {
+     "kind": "indicatorRear",
+     "side": "L",
+     "u": -0.397,
+     "v": 0.373
+    },
+    {
+     "kind": "indicatorRear",
+     "side": "R",
+     "u": -0.397,
+     "v": -0.373
+    },
+    {
+     "kind": "brake",
+     "side": "L",
+     "u": -0.413,
+     "v": 0.326
+    },
+    {
+     "kind": "brake",
+     "side": "R",
+     "u": -0.413,
+     "v": -0.326
+    },
+    {
+     "kind": "reverse",
+     "side": "L",
+     "u": -0.418,
+     "v": 0.27
+    },
+    {
+     "kind": "reverse",
+     "side": "R",
+     "u": -0.418,
+     "v": -0.27
+    }
+   ]
+  },
+  {
+   "id": "s10",
+   "x": 608,
+   "y": 20,
+   "w": 51,
+   "h": 104,
+   "front": "up",
+   "type": "sedan-2",
+   "lights": [
+    {
+     "kind": "head",
+     "side": "L",
+     "u": 0.424,
+     "v": 0.345
+    },
+    {
+     "kind": "head",
+     "side": "R",
+     "u": 0.424,
+     "v": -0.345
+    },
+    {
+     "kind": "indicatorFront",
+     "side": "L",
+     "u": 0.39,
+     "v": 0.393
+    },
+    {
+     "kind": "indicatorFront",
+     "side": "R",
+     "u": 0.39,
+     "v": -0.393
+    },
+    {
+     "kind": "indicatorRear",
+     "side": "L",
+     "u": -0.399,
+     "v": 0.383
+    },
+    {
+     "kind": "indicatorRear",
+     "side": "R",
+     "u": -0.399,
+     "v": -0.383
+    },
+    {
+     "kind": "brake",
+     "side": "L",
+     "u": -0.422,
+     "v": 0.326
+    },
+    {
+     "kind": "brake",
+     "side": "R",
+     "u": -0.422,
+     "v": -0.326
+    },
+    {
+     "kind": "reverse",
+     "side": "L",
+     "u": -0.437,
+     "v": 0.269
+    },
+    {
+     "kind": "reverse",
+     "side": "R",
+     "u": -0.437,
+     "v": -0.269
+    }
+   ]
+  },
+  {
+   "id": "s11",
+   "x": 674,
+   "y": 22,
+   "w": 50,
+   "h": 102,
+   "front": "up",
+   "type": "sedan-2",
+   "lights": [
+    {
+     "kind": "head",
+     "side": "L",
+     "u": 0.436,
+     "v": 0.328
+    },
+    {
+     "kind": "head",
+     "side": "R",
+     "u": 0.436,
+     "v": -0.328
+    },
+    {
+     "kind": "indicatorFront",
+     "side": "L",
+     "u": 0.408,
+     "v": 0.376
+    },
+    {
+     "kind": "indicatorFront",
+     "side": "R",
+     "u": 0.408,
+     "v": -0.376
+    },
+    {
+     "kind": "indicatorRear",
+     "side": "L",
+     "u": -0.389,
+     "v": 0.373
+    },
+    {
+     "kind": "indicatorRear",
+     "side": "R",
+     "u": -0.389,
+     "v": -0.373
+    },
+    {
+     "kind": "brake",
+     "side": "L",
+     "u": -0.398,
+     "v": 0.322
+    },
+    {
+     "kind": "brake",
+     "side": "R",
+     "u": -0.398,
+     "v": -0.322
+    },
+    {
+     "kind": "reverse",
+     "side": "L",
+     "u": -0.418,
+     "v": 0.27
+    },
+    {
+     "kind": "reverse",
+     "side": "R",
+     "u": -0.418,
+     "v": -0.27
+    }
+   ]
+  },
+  {
+   "id": "s12",
+   "x": 736,
+   "y": 20,
+   "w": 52,
+   "h": 104,
+   "front": "up",
+   "type": "sedan-2",
+   "lights": [
+    {
+     "kind": "head",
+     "side": "L",
+     "u": 0.423,
+     "v": 0.34
+    },
+    {
+     "kind": "head",
+     "side": "R",
+     "u": 0.423,
+     "v": -0.34
+    },
+    {
+     "kind": "indicatorFront",
+     "side": "L",
+     "u": 0.395,
+     "v": 0.392
+    },
+    {
+     "kind": "indicatorFront",
+     "side": "R",
+     "u": 0.395,
+     "v": -0.392
+    },
+    {
+     "kind": "indicatorRear",
+     "side": "L",
+     "u": -0.394,
+     "v": 0.392
+    },
+    {
+     "kind": "indicatorRear",
+     "side": "R",
+     "u": -0.394,
+     "v": -0.392
+    },
+    {
+     "kind": "brake",
+     "side": "L",
+     "u": -0.413,
+     "v": 0.34
+    },
+    {
+     "kind": "brake",
+     "side": "R",
+     "u": -0.413,
+     "v": -0.34
+    },
+    {
+     "kind": "reverse",
+     "side": "L",
+     "u": -0.428,
+     "v": 0.29
+    },
+    {
+     "kind": "reverse",
+     "side": "R",
+     "u": -0.428,
+     "v": -0.29
+    }
+   ]
+  },
+  {
+   "id": "s13",
+   "x": 798,
+   "y": 21,
+   "w": 48,
+   "h": 102,
+   "front": "up",
+   "type": "sedan-2",
+   "lights": [
+    {
+     "kind": "head",
+     "side": "L",
+     "u": 0.434,
+     "v": 0.336
+    },
+    {
+     "kind": "head",
+     "side": "R",
+     "u": 0.434,
+     "v": -0.336
+    },
+    {
+     "kind": "indicatorFront",
+     "side": "L",
+     "u": 0.403,
+     "v": 0.397
+    },
+    {
+     "kind": "indicatorFront",
+     "side": "R",
+     "u": 0.403,
+     "v": -0.397
+    },
+    {
+     "kind": "indicatorRear",
+     "side": "L",
+     "u": -0.399,
+     "v": 0.383
+    },
+    {
+     "kind": "indicatorRear",
+     "side": "R",
+     "u": -0.399,
+     "v": -0.383
+    },
+    {
+     "kind": "brake",
+     "side": "L",
+     "u": -0.41,
+     "v": 0.329
+    },
+    {
+     "kind": "brake",
+     "side": "R",
+     "u": -0.41,
+     "v": -0.329
+    },
+    {
+     "kind": "reverse",
+     "side": "L",
+     "u": -0.418,
+     "v": 0.27
+    },
+    {
+     "kind": "reverse",
+     "side": "R",
+     "u": -0.418,
+     "v": -0.27
+    }
+   ]
+  },
+  {
+   "id": "s14",
+   "x": 856,
+   "y": 19,
+   "w": 52,
+   "h": 103,
+   "front": "up",
+   "type": "sedan-2",
+   "lights": [
+    {
+     "kind": "head",
+     "side": "L",
+     "u": 0.417,
+     "v": 0.333
+    },
+    {
+     "kind": "head",
+     "side": "R",
+     "u": 0.417,
+     "v": -0.333
+    },
+    {
+     "kind": "indicatorFront",
+     "side": "L",
+     "u": 0.39,
+     "v": 0.371
+    },
+    {
+     "kind": "indicatorFront",
+     "side": "R",
+     "u": 0.39,
+     "v": -0.371
+    },
+    {
+     "kind": "indicatorRear",
+     "side": "L",
+     "u": -0.417,
+     "v": 0.377
+    },
+    {
+     "kind": "indicatorRear",
+     "side": "R",
+     "u": -0.417,
+     "v": -0.377
+    },
+    {
+     "kind": "brake",
+     "side": "L",
+     "u": -0.423,
+     "v": 0.327
+    },
+    {
+     "kind": "brake",
+     "side": "R",
+     "u": -0.423,
+     "v": -0.327
+    },
+    {
+     "kind": "reverse",
+     "side": "L",
+     "u": -0.434,
+     "v": 0.287
+    },
+    {
+     "kind": "reverse",
+     "side": "R",
+     "u": -0.434,
+     "v": -0.287
+    }
+   ]
+  },
+  {
+   "id": "s15",
+   "x": 920,
+   "y": 20,
+   "w": 52,
+   "h": 104,
+   "front": "up",
+   "type": "sedan-2",
+   "lights": [
+    {
+     "kind": "head",
+     "side": "L",
+     "u": 0.419,
+     "v": 0.311
+    },
+    {
+     "kind": "head",
+     "side": "R",
+     "u": 0.419,
+     "v": -0.311
+    },
+    {
+     "kind": "indicatorFront",
+     "side": "L",
+     "u": 0.394,
+     "v": 0.356
+    },
+    {
+     "kind": "indicatorFront",
+     "side": "R",
+     "u": 0.394,
+     "v": -0.356
+    },
+    {
+     "kind": "indicatorRear",
+     "side": "L",
+     "u": -0.379,
+     "v": 0.348
+    },
+    {
+     "kind": "indicatorRear",
+     "side": "R",
+     "u": -0.379,
+     "v": -0.348
+    },
+    {
+     "kind": "brake",
+     "side": "L",
+     "u": -0.398,
+     "v": 0.322
+    },
+    {
+     "kind": "brake",
+     "side": "R",
+     "u": -0.398,
+     "v": -0.322
+    },
+    {
+     "kind": "reverse",
+     "side": "L",
+     "u": -0.418,
+     "v": 0.27
+    },
+    {
+     "kind": "reverse",
+     "side": "R",
+     "u": -0.418,
+     "v": -0.27
+    }
+   ]
+  },
+  {
+   "id": "s16",
+   "x": 984,
+   "y": 22,
+   "w": 51,
+   "h": 102,
+   "front": "up",
+   "type": "sedan-2",
+   "lights": [
+    {
+     "kind": "head",
+     "side": "L",
+     "u": 0.42,
+     "v": 0.323
+    },
+    {
+     "kind": "head",
+     "side": "R",
+     "u": 0.42,
+     "v": -0.323
+    },
+    {
+     "kind": "indicatorFront",
+     "side": "L",
+     "u": 0.394,
+     "v": 0.356
+    },
+    {
+     "kind": "indicatorFront",
+     "side": "R",
+     "u": 0.394,
+     "v": -0.356
+    },
+    {
+     "kind": "indicatorRear",
+     "side": "L",
+     "u": -0.384,
+     "v": 0.373
+    },
+    {
+     "kind": "indicatorRear",
+     "side": "R",
+     "u": -0.384,
+     "v": -0.373
+    },
+    {
+     "kind": "brake",
+     "side": "L",
+     "u": -0.398,
+     "v": 0.322
+    },
+    {
+     "kind": "brake",
+     "side": "R",
+     "u": -0.398,
+     "v": -0.322
+    },
+    {
+     "kind": "reverse",
+     "side": "L",
+     "u": -0.418,
+     "v": 0.27
+    },
+    {
+     "kind": "reverse",
+     "side": "R",
+     "u": -0.418,
+     "v": -0.27
+    }
+   ]
+  },
+  {
+   "id": "s17",
+   "x": 1048,
+   "y": 21,
+   "w": 49,
+   "h": 103,
+   "front": "up",
+   "type": "sedan-2",
+   "lights": [
+    {
+     "kind": "head",
+     "side": "L",
+     "u": 0.419,
+     "v": 0.339
+    },
+    {
+     "kind": "head",
+     "side": "R",
+     "u": 0.419,
+     "v": -0.339
+    },
+    {
+     "kind": "indicatorFront",
+     "side": "L",
+     "u": 0.389,
+     "v": 0.405
+    },
+    {
+     "kind": "indicatorFront",
+     "side": "R",
+     "u": 0.389,
+     "v": -0.405
+    },
+    {
+     "kind": "indicatorRear",
+     "side": "L",
+     "u": -0.395,
+     "v": 0.392
+    },
+    {
+     "kind": "indicatorRear",
+     "side": "R",
+     "u": -0.395,
+     "v": -0.392
+    },
+    {
+     "kind": "brake",
+     "side": "L",
+     "u": -0.414,
+     "v": 0.337
+    },
+    {
+     "kind": "brake",
+     "side": "R",
+     "u": -0.414,
+     "v": -0.337
+    },
+    {
+     "kind": "reverse",
+     "side": "L",
+     "u": -0.418,
+     "v": 0.27
+    },
+    {
+     "kind": "reverse",
+     "side": "R",
+     "u": -0.418,
+     "v": -0.27
+    }
+   ]
+  },
+  {
+   "id": "s18",
+   "x": 1112,
+   "y": 16,
+   "w": 51,
+   "h": 108,
+   "front": "up",
+   "type": "sedan-2",
+   "lights": [
+    {
+     "kind": "head",
+     "side": "L",
+     "u": 0.404,
+     "v": 0.349
+    },
+    {
+     "kind": "head",
+     "side": "R",
+     "u": 0.404,
+     "v": -0.349
+    },
+    {
+     "kind": "indicatorFront",
+     "side": "L",
+     "u": 0.368,
+     "v": 0.4
+    },
+    {
+     "kind": "indicatorFront",
+     "side": "R",
+     "u": 0.368,
+     "v": -0.4
+    },
+    {
+     "kind": "indicatorRear",
+     "side": "L",
+     "u": -0.396,
+     "v": 0.413
+    },
+    {
+     "kind": "indicatorRear",
+     "side": "R",
+     "u": -0.396,
+     "v": -0.413
+    },
+    {
+     "kind": "brake",
+     "side": "L",
+     "u": -0.417,
+     "v": 0.356
+    },
+    {
+     "kind": "brake",
+     "side": "R",
+     "u": -0.417,
+     "v": -0.356
+    },
+    {
+     "kind": "reverse",
+     "side": "L",
+     "u": -0.429,
+     "v": 0.289
+    },
+    {
+     "kind": "reverse",
+     "side": "R",
+     "u": -0.429,
+     "v": -0.289
+    }
+   ]
+  },
+  {
+   "id": "s19",
+   "x": 1176,
+   "y": 20,
+   "w": 54,
+   "h": 104,
+   "front": "up",
+   "type": "sedan-2",
+   "lights": [
+    {
+     "kind": "head",
+     "side": "L",
+     "u": 0.428,
+     "v": 0.331
+    },
+    {
+     "kind": "head",
+     "side": "R",
+     "u": 0.428,
+     "v": -0.331
+    },
+    {
+     "kind": "indicatorFront",
+     "side": "L",
+     "u": 0.394,
+     "v": 0.356
+    },
+    {
+     "kind": "indicatorFront",
+     "side": "R",
+     "u": 0.394,
+     "v": -0.356
+    },
+    {
+     "kind": "indicatorRear",
+     "side": "L",
+     "u": -0.4,
+     "v": 0.369
+    },
+    {
+     "kind": "indicatorRear",
+     "side": "R",
+     "u": -0.4,
+     "v": -0.369
+    },
+    {
+     "kind": "brake",
+     "side": "L",
+     "u": -0.416,
+     "v": 0.315
+    },
+    {
+     "kind": "brake",
+     "side": "R",
+     "u": -0.416,
+     "v": -0.315
+    },
+    {
+     "kind": "reverse",
+     "side": "L",
+     "u": -0.428,
+     "v": 0.267
+    },
+    {
+     "kind": "reverse",
+     "side": "R",
+     "u": -0.428,
+     "v": -0.267
+    }
+   ]
+  },
+  {
+   "id": "s20",
+   "x": 28,
+   "y": 134,
+   "w": 54,
+   "h": 108,
+   "front": "up",
+   "type": "sedan-2",
+   "lights": []
+  },
+  {
+   "id": "s21",
+   "x": 92,
+   "y": 134,
+   "w": 56,
+   "h": 108,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s22",
+   "x": 160,
+   "y": 136,
+   "w": 56,
+   "h": 104,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s23",
+   "x": 224,
+   "y": 134,
+   "w": 58,
+   "h": 106,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s24",
+   "x": 294,
+   "y": 136,
+   "w": 56,
+   "h": 106,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s25",
+   "x": 362,
+   "y": 136,
+   "w": 54,
+   "h": 106,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s26",
+   "x": 428,
+   "y": 136,
+   "w": 54,
+   "h": 106,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s27",
+   "x": 494,
+   "y": 136,
+   "w": 56,
+   "h": 106,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s28",
+   "x": 564,
+   "y": 136,
+   "w": 58,
+   "h": 104,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s29",
+   "x": 636,
+   "y": 136,
+   "w": 56,
+   "h": 106,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s30",
+   "x": 704,
+   "y": 134,
+   "w": 56,
+   "h": 108,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s31",
+   "x": 772,
+   "y": 136,
+   "w": 56,
+   "h": 106,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s32",
+   "x": 840,
+   "y": 136,
+   "w": 58,
+   "h": 106,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s33",
+   "x": 914,
+   "y": 134,
+   "w": 60,
+   "h": 108,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s34",
+   "x": 988,
+   "y": 136,
+   "w": 58,
+   "h": 106,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s35",
+   "x": 1058,
+   "y": 136,
+   "w": 58,
+   "h": 106,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s36",
+   "x": 1130,
+   "y": 134,
+   "w": 56,
+   "h": 108,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s37",
+   "x": 1200,
+   "y": 134,
+   "w": 56,
+   "h": 108,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s38",
+   "x": 22,
+   "y": 254,
+   "w": 60,
+   "h": 118,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s39",
+   "x": 92,
+   "y": 256,
+   "w": 56,
+   "h": 116,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s40",
+   "x": 158,
+   "y": 254,
+   "w": 60,
+   "h": 116,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s41",
+   "x": 228,
+   "y": 254,
+   "w": 60,
+   "h": 118,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s42",
+   "x": 300,
+   "y": 254,
+   "w": 62,
+   "h": 118,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s43",
+   "x": 376,
+   "y": 254,
+   "w": 60,
+   "h": 118,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s44",
+   "x": 450,
+   "y": 252,
+   "w": 64,
+   "h": 120,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s45",
+   "x": 528,
+   "y": 254,
+   "w": 58,
+   "h": 116,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s46",
+   "x": 598,
+   "y": 252,
+   "w": 62,
+   "h": 120,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s47",
+   "x": 668,
+   "y": 258,
+   "w": 54,
+   "h": 114,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s48",
+   "x": 732,
+   "y": 254,
+   "w": 60,
+   "h": 118,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s49",
+   "x": 800,
+   "y": 254,
+   "w": 58,
+   "h": 118,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s50",
+   "x": 868,
+   "y": 254,
+   "w": 58,
+   "h": 118,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s51",
+   "x": 934,
+   "y": 254,
+   "w": 58,
+   "h": 118,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s52",
+   "x": 1002,
+   "y": 254,
+   "w": 54,
+   "h": 116,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s53",
+   "x": 1066,
+   "y": 256,
+   "w": 56,
+   "h": 114,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s54",
+   "x": 1134,
+   "y": 256,
+   "w": 54,
+   "h": 112,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s55",
+   "x": 1198,
+   "y": 254,
+   "w": 62,
+   "h": 120,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s56",
+   "x": 22,
+   "y": 380,
+   "w": 64,
+   "h": 130,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s57",
+   "x": 98,
+   "y": 384,
+   "w": 62,
+   "h": 124,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s58",
+   "x": 172,
+   "y": 382,
+   "w": 66,
+   "h": 128,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s59",
+   "x": 248,
+   "y": 382,
+   "w": 64,
+   "h": 128,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s60",
+   "x": 322,
+   "y": 384,
+   "w": 62,
+   "h": 124,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s61",
+   "x": 396,
+   "y": 384,
+   "w": 64,
+   "h": 126,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s62",
+   "x": 470,
+   "y": 380,
+   "w": 64,
+   "h": 132,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s63",
+   "x": 544,
+   "y": 376,
+   "w": 64,
+   "h": 138,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s64",
+   "x": 618,
+   "y": 386,
+   "w": 62,
+   "h": 126,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s65",
+   "x": 692,
+   "y": 388,
+   "w": 60,
+   "h": 126,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s66",
+   "x": 762,
+   "y": 382,
+   "w": 58,
+   "h": 130,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s67",
+   "x": 834,
+   "y": 384,
+   "w": 64,
+   "h": 128,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s68",
+   "x": 910,
+   "y": 382,
+   "w": 66,
+   "h": 130,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s69",
+   "x": 988,
+   "y": 386,
+   "w": 58,
+   "h": 126,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s70",
+   "x": 1058,
+   "y": 384,
+   "w": 56,
+   "h": 128,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s71",
+   "x": 1124,
+   "y": 378,
+   "w": 62,
+   "h": 134,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s72",
+   "x": 1198,
+   "y": 384,
+   "w": 64,
+   "h": 128,
+   "front": "up",
+   "type": "sedan",
+   "lights": []
+  },
+  {
+   "id": "s73",
+   "x": 26,
+   "y": 522,
+   "w": 64,
+   "h": 198,
+   "front": "up",
+   "type": "van",
+   "lights": []
+  },
+  {
+   "id": "s74",
+   "x": 102,
+   "y": 522,
+   "w": 54,
+   "h": 198,
+   "front": "up",
+   "type": "van",
+   "lights": []
+  },
+  {
+   "id": "s75",
+   "x": 168,
+   "y": 522,
+   "w": 56,
+   "h": 198,
+   "front": "up",
+   "type": "van",
+   "lights": []
+  },
+  {
+   "id": "s76",
+   "x": 234,
+   "y": 522,
+   "w": 56,
+   "h": 198,
+   "front": "up",
+   "type": "van",
+   "lights": []
+  },
+  {
+   "id": "s77",
+   "x": 300,
+   "y": 520,
+   "w": 56,
+   "h": 200,
+   "front": "up",
+   "type": "van",
+   "lights": []
+  },
+  {
+   "id": "s78",
+   "x": 364,
+   "y": 522,
+   "w": 58,
+   "h": 198,
+   "front": "up",
+   "type": "van",
+   "lights": []
+  },
+  {
+   "id": "s79",
+   "x": 434,
+   "y": 524,
+   "w": 56,
+   "h": 196,
+   "front": "up",
+   "type": "van",
+   "lights": []
+  },
+  {
+   "id": "s80",
+   "x": 500,
+   "y": 520,
+   "w": 66,
+   "h": 200,
+   "front": "up",
+   "type": "van",
+   "lights": []
+  },
+  {
+   "id": "s81",
+   "x": 576,
+   "y": 522,
+   "w": 60,
+   "h": 198,
+   "front": "up",
+   "type": "van",
+   "lights": []
+  },
+  {
+   "id": "s82",
+   "x": 648,
+   "y": 528,
+   "w": 62,
+   "h": 192,
+   "front": "up",
+   "type": "van",
+   "lights": []
+  },
+  {
+   "id": "s83",
+   "x": 720,
+   "y": 528,
+   "w": 56,
+   "h": 192,
+   "front": "up",
+   "type": "van",
+   "lights": []
+  },
+  {
+   "id": "s84",
+   "x": 788,
+   "y": 526,
+   "w": 60,
+   "h": 194,
+   "front": "up",
+   "type": "van",
+   "lights": []
+  },
+  {
+   "id": "s85",
+   "x": 858,
+   "y": 526,
+   "w": 58,
+   "h": 194,
+   "front": "up",
+   "type": "van",
+   "lights": []
+  },
+  {
+   "id": "s86",
+   "x": 928,
+   "y": 524,
+   "w": 58,
+   "h": 196,
+   "front": "up",
+   "type": "van",
+   "lights": []
+  },
+  {
+   "id": "s87",
+   "x": 998,
+   "y": 524,
+   "w": 58,
+   "h": 196,
+   "front": "up",
+   "type": "van",
+   "lights": []
+  },
+  {
+   "id": "s88",
+   "x": 1066,
+   "y": 522,
+   "w": 60,
+   "h": 198,
+   "front": "up",
+   "type": "van",
+   "lights": []
+  },
+  {
+   "id": "s89",
+   "x": 1136,
+   "y": 524,
+   "w": 58,
+   "h": 196,
+   "front": "up",
+   "type": "van",
+   "lights": []
+  },
+  {
+   "id": "s90",
+   "x": 1204,
+   "y": 524,
+   "w": 56,
+   "h": 196,
+   "front": "up",
+   "type": "van",
+   "lights": []
+  },
+  {
+   "id": "s91",
+   "x": 24,
+   "y": 730,
+   "w": 56,
+   "h": 104,
+   "front": "up",
+   "type": "tractor",
+   "lights": []
+  },
+  {
+   "id": "s92",
+   "x": 90,
+   "y": 730,
+   "w": 58,
+   "h": 104,
+   "front": "up",
+   "type": "tractor",
+   "lights": []
+  },
+  {
+   "id": "s93",
+   "x": 158,
+   "y": 732,
+   "w": 58,
+   "h": 102,
+   "front": "up",
+   "type": "tractor",
+   "lights": []
+  },
+  {
+   "id": "s94",
+   "x": 226,
+   "y": 732,
+   "w": 58,
+   "h": 102,
+   "front": "up",
+   "type": "tractor",
+   "lights": []
+  },
+  {
+   "id": "s95",
+   "x": 294,
+   "y": 734,
+   "w": 56,
+   "h": 100,
+   "front": "up",
+   "type": "tractor",
+   "lights": []
+  },
+  {
+   "id": "s96",
+   "x": 360,
+   "y": 734,
+   "w": 60,
+   "h": 100,
+   "front": "up",
+   "type": "tractor",
+   "lights": []
+  },
+  {
+   "id": "s97",
+   "x": 436,
+   "y": 726,
+   "w": 54,
+   "h": 108,
+   "front": "up",
+   "type": "trailer",
+   "lights": []
+  },
+  {
+   "id": "s98",
+   "x": 508,
+   "y": 726,
+   "w": 52,
+   "h": 108,
+   "front": "up",
+   "type": "trailer",
+   "lights": []
+  },
+  {
+   "id": "s99",
+   "x": 580,
+   "y": 726,
+   "w": 60,
+   "h": 108,
+   "front": "up",
+   "type": "trailer",
+   "lights": []
+  },
+  {
+   "id": "s100",
+   "x": 656,
+   "y": 728,
+   "w": 60,
+   "h": 106,
+   "front": "up",
+   "type": "trailer",
+   "lights": []
+  },
+  {
+   "id": "s101",
+   "x": 732,
+   "y": 726,
+   "w": 58,
+   "h": 108,
+   "front": "up",
+   "type": "trailer",
+   "lights": []
+  },
+  {
+   "id": "s102",
+   "x": 808,
+   "y": 726,
+   "w": 62,
+   "h": 108,
+   "front": "up",
+   "type": "trailer",
+   "lights": []
+  },
+  {
+   "id": "s103",
+   "x": 890,
+   "y": 728,
+   "w": 60,
+   "h": 106,
+   "front": "up",
+   "type": "trailer",
+   "lights": []
+  },
+  {
+   "id": "s104",
+   "x": 968,
+   "y": 730,
+   "w": 64,
+   "h": 104,
+   "front": "up",
+   "type": "trailer",
+   "lights": []
+  },
+  {
+   "id": "s105",
+   "x": 1046,
+   "y": 728,
+   "w": 64,
+   "h": 106,
+   "front": "up",
+   "type": "trailer",
+   "lights": []
+  },
+  {
+   "id": "s106",
+   "x": 1126,
+   "y": 726,
+   "w": 62,
+   "h": 108,
+   "front": "up",
+   "type": "trailer",
+   "lights": []
+  },
+  {
+   "id": "s107",
+   "x": 1200,
+   "y": 728,
+   "w": 58,
+   "h": 106,
+   "front": "up",
+   "type": "trailer",
+   "lights": []
+  }
+ ],
+ "modified": 1791476311868
+}

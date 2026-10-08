@@ -1,7 +1,7 @@
 import { v2, add, sub, mul, dot, len, fromAngle } from './vec.js';
 import { Car } from './car.js';
 import { Driver } from './ai.js';
-import { buildCity, nodePos, neighbours, randomVehicle, PITCH, ROAD, LANE, N } from './city.js';
+import { buildCity, setSpritePool, nodePos, neighbours, randomVehicle, PITCH, ROAD, LANE, N } from './city.js';
 import { collideAll } from './collide.js';
 import { PRESETS, TRAFFIC_MIX } from './vehicles.js';
 import { createDebugPanel, isTyping } from './debug.js';
@@ -10,6 +10,7 @@ import { Horn } from './horn.js';
 import { TouchControls } from './touch.js';
 import { Junctions, freeAgent, boxAt, nodeKey, axisOf, STOP_LINE, heldByRules } from './junctions.js';
 import { SpatialGrid } from './spatial.js';
+import { loadVehicleSprites, drawSprite, modelConfig } from './sprites.js';
 import { Violations } from './violations.js';
 
 const canvas = document.getElementById('view');
@@ -28,7 +29,54 @@ let stepNo = 0;
 const CRATE_DRAG = 3; // 1/s, sliding friction for loose crates
 
 // ---------- world ----------
+// Vehicle sprites from the annotated atlases (cars stay plain shapes if they're missing).
+const vehicleSprites = await loadVehicleSprites().catch(() => null);
+setSpritePool(vehicleSprites);
 const city = buildCity();
+
+// Road surface: the asphalt texture, tiled at the same scale as the vehicle
+// atlas (~22.4 px per metre), so a 128 px tile covers about 5.7 m.
+// Canvas patterns are very slow to fill (~15 ms a frame), so the tile is
+// copied into one 8x8-tile block up front and the few blocks on screen are
+// drawn as plain images (~1 ms).
+const ASPHALT_TILE_M = 128 / 22.4;
+const ASPHALT_BLOCK = 8; // tiles per side
+const asphaltBlock = await loadImage('concept/asphalt.webp').then(tileBlock).catch(() => null);
+function loadImage(src) {
+    const img = new Image();
+    img.src = src;
+    return img.decode().then(() => img);
+}
+function tileBlock(tile) {
+    const c = document.createElement('canvas');
+    c.width = tile.width * ASPHALT_BLOCK;
+    c.height = tile.height * ASPHALT_BLOCK;
+    const g = c.getContext('2d');
+    for (let i = 0; i < ASPHALT_BLOCK; i++)
+        for (let j = 0; j < ASPHALT_BLOCK; j++) g.drawImage(tile, i * tile.width, j * tile.height);
+    return c;
+}
+// Fill rectangle r (world metres) with asphalt, only where it's on screen (view).
+function fillAsphalt(r, view) {
+    if (!asphaltBlock) {
+        ctx.fillStyle = '#3b4048';
+        ctx.fillRect(r.x, r.y, r.w, r.h);
+        return;
+    }
+    const size = ASPHALT_TILE_M * ASPHALT_BLOCK;
+    const x0 = Math.max(r.x, view.x0), x1 = Math.min(r.x + r.w, view.x1);
+    const y0 = Math.max(r.y, view.y0), y1 = Math.min(r.y + r.h, view.y1);
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(r.x, r.y, r.w, r.h);
+    ctx.clip();
+    for (let x = Math.floor(x0 / size) * size; x < x1; x += size)
+        for (let y = Math.floor(y0 / size) * size; y < y1; y += size)
+            // Sample half a pixel in from the block's edges: smoothing would
+            // otherwise blend them with transparency and show a faint seam.
+            ctx.drawImage(asphaltBlock, 0.5, 0.5, asphaltBlock.width - 1, asphaltBlock.height - 1, x, y, size + 0.01, size + 0.01);
+    ctx.restore();
+}
 const { statics, crates } = city;
 const cars = [...city.parked];
 const drivers = new Map(); // car -> Driver
@@ -41,6 +89,12 @@ function placeOnRoad(car, from, to, t) {
 }
 
 let player = new Car({ ...PRESETS.classic, color: '#ffd23f' });
+// The player's car keeps its tuned handling but takes its sprite's size.
+function dressPlayer() {
+    player.model = vehicleSprites?.pickPlayer() ?? null;
+    if (player.model) player.configure(modelConfig(player.model, PRESETS.classic));
+}
+dressPlayer();
 placeOnRoad(player, [2, 2], [3, 2], 0.3);
 cars.push(player);
 
@@ -252,10 +306,9 @@ function box(e, fill, stroke, lw = 0.08) {
     ctx.restore();
 }
 
-function drawGround() {
+function drawGround(view) {
     const lo = -ROAD / 2, hi = N * PITCH + ROAD / 2;
-    ctx.fillStyle = '#3b4048'; // asphalt everywhere, blocks drawn on top
-    ctx.fillRect(lo, lo, hi - lo, hi - lo);
+    fillAsphalt({ x: lo, y: lo, w: hi - lo, h: hi - lo }, view); // asphalt everywhere, blocks drawn on top
     for (const b of city.blocks) {
         ctx.fillStyle = '#8a8d91'; // pavement
         ctx.fillRect(b.x0, b.y0, b.x1 - b.x0, b.y1 - b.y0);
@@ -341,8 +394,32 @@ function drawJunctions(layer) {
     }
 }
 
-// Indicators / hazard lights (blinking amber at all four corners on the
-// signalled side) and the double headlight flash used to give way.
+// Where a car's lamps are, in its local frame (metres): from its sprite's
+// annotations when it has them, otherwise near the corners.
+function lampsOf(car, kind) {
+    const L = car.halfL * 2, W = car.halfW * 2;
+    const marked = car.model?.lights.filter((l) => l.kind === kind);
+    if (marked?.length) return marked.map((l) => ({ x: l.u * L, y: l.v * W, side: l.side }));
+    const x = car.halfL, y = car.halfW - 0.1;
+    const pair = (px, py) => [{ x: px, y: py, side: 'L' }, { x: px, y: -py, side: 'R' }];
+    switch (kind) {
+        case 'head': return pair(x, y - 0.35);
+        case 'indicatorFront': return pair(x - 0.2, y - 0.05);
+        case 'indicatorRear': return pair(-x + 0.2, y - 0.05);
+        case 'brake': return pair(-x + 0.1, y - 0.3);
+        case 'reverse': return pair(-x + 0.1, y - 0.6);
+    }
+    return [];
+}
+function glow(p, core, halo, r) {
+    ctx.fillStyle = halo;
+    ctx.beginPath(); ctx.arc(p.x, p.y, r * 2.4, 0, 7); ctx.fill();
+    ctx.fillStyle = core;
+    ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, 7); ctx.fill();
+}
+
+// Indicators / hazard lights (blinking amber on the signalled side), brake
+// and reversing lights, and headlight flashes.
 function drawCarLights(car, x, y) {
     if (car.honking) { // sound rings spreading from the bonnet
         ctx.strokeStyle = 'rgba(255,255,255,0.55)';
@@ -354,18 +431,19 @@ function drawCarLights(car, x, y) {
         }
         ctx.globalAlpha = 1;
     }
+    // Brake lights while braking; reversing lights while backing up.
+    const inp = car.input, b = car.body;
+    const vF = b.vel.x * Math.cos(b.angle) + b.vel.y * Math.sin(b.angle);
+    const braking = inp && ((inp.throttle < 0 && vF > 0.3) || (inp.throttle > 0 && vF < -0.3) || (inp.brake > 0 && Math.abs(vF) > 0.05));
+    if (braking) for (const p of lampsOf(car, 'brake')) glow(p, '#ff2a1f', 'rgba(255,40,30,0.3)', 0.2);
+    if (inp && inp.throttle < 0 && vF < -0.3) for (const p of lampsOf(car, 'reverse')) glow(p, '#f4fbff', 'rgba(220,240,255,0.3)', 0.17);
+
     car.blinkPhase ??= Math.random();
     const sig = car.signal;
     if (sig && ((junctions.t * 1.5 + car.blinkPhase) % 1) < 0.5) {
-        const sides = sig === 'hazard' ? [1, -1] : [sig === 'left' ? 1 : -1];
-        for (const side of sides)
-            for (const ex of [x - 0.2, -x + 0.2]) {
-                const ey = side * (y - 0.05);
-                ctx.fillStyle = 'rgba(255,174,0,0.35)';
-                ctx.beginPath(); ctx.arc(ex, ey, 0.65, 0, 7); ctx.fill();
-                ctx.fillStyle = '#ffb400';
-                ctx.beginPath(); ctx.arc(ex, ey, 0.26, 0, 7); ctx.fill();
-            }
+        const sides = sig === 'hazard' ? ['L', 'R'] : [sig === 'left' ? 'L' : 'R'];
+        for (const kind of ['indicatorFront', 'indicatorRear'])
+            for (const p of lampsOf(car, kind)) if (sides.includes(p.side)) glow(p, '#ffb400', 'rgba(255,174,0,0.35)', 0.24);
     }
     // Two short flashes = "go ahead"; one long flash = "hey, you!"
     const short = car.flash > 0 && ((0.9 - car.flash) < 0.18 || ((0.9 - car.flash) > 0.36 && (0.9 - car.flash) < 0.54));
@@ -374,12 +452,7 @@ function drawCarLights(car, x, y) {
         ctx.beginPath(); // beams
         ctx.moveTo(x, y - 0.3); ctx.lineTo(x + 7, y + 1.6); ctx.lineTo(x + 7, -y - 1.6); ctx.lineTo(x, -y + 0.3);
         ctx.closePath(); ctx.fill();
-        for (const side of [1, -1]) {
-            ctx.fillStyle = 'rgba(255,255,230,0.6)';
-            ctx.beginPath(); ctx.arc(x, side * (y - 0.35), 0.6, 0, 7); ctx.fill();
-            ctx.fillStyle = '#fffbe8';
-            ctx.beginPath(); ctx.arc(x, side * (y - 0.35), 0.28, 0, 7); ctx.fill();
-        }
+        for (const p of lampsOf(car, 'head')) glow(p, '#fffbe8', 'rgba(255,255,230,0.5)', 0.26);
     }
 }
 
@@ -388,6 +461,12 @@ function drawCar(car) {
     ctx.save();
     ctx.translate(b.pos.x, b.pos.y);
     ctx.rotate(b.angle);
+    if (car.model) {
+        drawSprite(ctx, car.model, car.halfL * 2, car.halfW * 2);
+        drawCarLights(car, car.halfL, car.halfW - 0.1);
+        ctx.restore();
+        return;
+    }
     const big = car.cfg.mass > 4000;
     const tl = big ? 0.55 : 0.4, tw = big ? 0.2 : 0.15;
     for (const w of car.wheels) {
@@ -496,7 +575,7 @@ function draw(frameDt) {
     const vx = W / s / 2 + 10, vy = H / s / 2 + 10;
     const visible = (e) => Math.abs(e.body.pos.x - cam.x) < vx + e.radius && Math.abs(e.body.pos.y - cam.y) < vy + e.radius;
 
-    drawGround();
+    drawGround({ x0: cam.x - vx, x1: cam.x + vx, y0: cam.y - vy, y1: cam.y + vy });
     drawJunctions('markings');
 
     ctx.strokeStyle = 'rgba(0,0,0,0.5)';
@@ -572,6 +651,17 @@ function frame(t) {
 }
 requestAnimationFrame(frame);
 
+// Switch which sprites cars wear (debug menu). Sizes stay as they are; the
+// new sprite is fitted to each car's body.
+function reskin(mode) {
+    if (!vehicleSprites) return;
+    vehicleSprites.mode = mode;
+    for (const car of cars)
+        if (car === player) dressPlayer();
+        else car.model = vehicleSprites.pick(car.presetKey ?? 'sedan');
+}
+options.sprites = vehicleSprites ? vehicleSprites.mode : 'off';
+
 const debug = createDebugPanel({
     getCar: () => player,
     applyCar: (cfg) => player.configure(cfg),
@@ -580,6 +670,9 @@ const debug = createDebugPanel({
     setTraffic,
     maxTraffic: MAX_TRAFFIC,
     getOption: (k) => options[k],
-    setOption: (k, v) => { options[k] = v; },
+    setOption: (k, v) => {
+        options[k] = v;
+        if (k === 'sprites') reskin(v);
+    },
 });
 canvas.addEventListener('pointerdown', () => document.activeElement?.blur());

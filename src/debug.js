@@ -82,6 +82,12 @@ export function createDebugPanel(api) {
         () => api.getOption('timeScale'), (v) => api.setOption('timeScale', v));
     const zoomBox = h('input', { type: 'checkbox' });
     zoomBox.addEventListener('change', () => api.setOption('speedZoom', zoomBox.checked));
+    const spriteSel = h('select', { 'aria-label': 'Vehicle sprites' },
+        h('option', { value: 'all' }, 'all atlas sprites'),
+        h('option', { value: 'verified' }, 'only marked-up ones (with lamps)'),
+        h('option', { value: 'off' }, 'off (plain shapes)'));
+    spriteSel.addEventListener('change', () => { api.setOption('sprites', spriteSel.value); spriteSel.blur(); });
+    syncers.push(() => (spriteSel.value = api.getOption('sprites') ?? 'off'));
     const aiBox = h('input', { type: 'checkbox' });
     aiBox.addEventListener('change', () => api.setOption('showAI', aiBox.checked));
     syncers.push(traffic.sync, timeScale.sync, () => (zoomBox.checked = api.getOption('speedZoom')),
@@ -184,7 +190,8 @@ export function createDebugPanel(api) {
 
     panel.append(
         h('h2', {}, 'Debug'),
-        h('section', {}, h('h3', {}, 'World'), traffic.row, trafficNote, timeScale.row,
+        h('section', {}, h('h3', {}, 'World'), traffic.row, trafficNote,
+            h('label', { class: 'row' }, h('span', { class: 'lbl' }, 'Vehicle sprites'), spriteSel), timeScale.row,
             h('label', { class: 'row check' }, zoomBox, h('span', {}, 'Speed zoom')),
             h('label', { class: 'row check' }, aiBox, h('span', {}, 'Show AI state labels')),
             h('ul', { class: 'legend' },

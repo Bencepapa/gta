@@ -2,6 +2,7 @@ import { v2 } from './vec.js';
 import { Body } from './body.js';
 import { Car } from './car.js';
 import { PRESETS, PARKING_MIX, pickWeighted } from './vehicles.js';
+import { modelConfig } from './sprites.js';
 
 // A grid city: roads run along x = i*PITCH and y = j*PITCH for i, j in 0..N.
 export const PITCH = 56;
@@ -40,11 +41,26 @@ export function crate(x, y, half, angle) {
 }
 
 const ROOFS = ['#7a5c58', '#5f6b7a', '#7d7466', '#5d7363', '#8a6f4e', '#6b5f78', '#787878'];
+// Vehicle sprites (sprites.js); null = draw cars as plain shapes.
+let spritePool = null;
+const spriteRand = rng(4242);
+export const setSpritePool = (pool) => { spritePool = pool; };
+
+// Give a car a sprite that drives like its preset, sized from the sprite.
+export function dress(car, presetKey, r = Math.random) {
+    car.presetKey = presetKey;
+    const model = spritePool?.pick(presetKey, r) ?? null;
+    car.model = model;
+    if (model) car.configure(modelConfig(model, PRESETS[presetKey]));
+    return car;
+}
+
 // Everyday cars get a random paint job; special vehicles keep their livery.
 export function randomVehicle(mix, r) {
     const type = pickWeighted(mix, r);
     const recolor = type === 'sedan' || type === 'wagon' || type === 'classic';
-    return new Car({ ...PRESETS[type], color: recolor ? randomCarColor(r) : PRESETS[type].color });
+    // Sprite picks use their own random numbers so they don't change the city layout.
+    return dress(new Car({ ...PRESETS[type], color: recolor ? randomCarColor(r) : PRESETS[type].color }), type, spriteRand);
 }
 
 const CAR_COLORS = ['#e05d5d', '#5d9be0', '#e0c45d', '#d0d4da', '#6fcf8a', '#c27be0', '#e0905d', '#3c4450'];

@@ -42,6 +42,7 @@ export class Car {
     // controls: { throttle: -1..1, steer: -1..1 (+ = left), handbrake: bool,
     //             brake?: 0..1 (foot brake: can bring the car to rest and hold it) }
     update(controls, dt) {
+        this.input = controls;
         const c = this.cfg, b = this.body;
         const fwd = fromAngle(b.angle);
         const vFwd = dot(b.vel, fwd);

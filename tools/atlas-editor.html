@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="hu">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Vehicle Atlas Editor</title>
+    <style>
+        :root { --bg: #15181d; --panel: #1d2128; --line: #323844; --text: #dfe5ec; --dim: #8a94a1; --accent: #8ce6c5; --warn: #ffb020; }
+        * { box-sizing: border-box; }
+        html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text); font: 13px/1.4 system-ui, sans-serif; }
+        body { display: grid; grid-template-columns: 1fr 340px; height: 100vh; overflow: hidden; }
+        #stage { position: relative; overflow: hidden; background: repeating-conic-gradient(#20242b 0 25%, #191c22 0 50%) 0 0 / 24px 24px; }
+        #view { display: block; width: 100%; height: 100%; cursor: crosshair; }
+        #status { position: absolute; left: 8px; bottom: 8px; background: rgba(0,0,0,.6); padding: 4px 8px; border-radius: 4px; color: var(--dim); pointer-events: none; }
+        aside { background: var(--panel); border-left: 1px solid var(--line); overflow-y: auto; overflow-x: hidden; padding: 12px; }
+        .grid2 > label, .grid2 input, .grid2 select { min-width: 0; }
+        h1 { font-size: 15px; margin: 0 0 8px; }
+        h2 { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--accent); margin: 16px 0 6px; }
+        section { border-top: 1px solid var(--line); padding-bottom: 4px; }
+        label { display: block; margin: 4px 0; }
+        .row { display: flex; gap: 6px; align-items: center; margin: 4px 0; flex-wrap: wrap; }
+        .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 8px; }
+        .grid2 label { margin: 0; }
+        input, select, button { font: inherit; color: inherit; background: #111419; border: 1px solid var(--line); border-radius: 4px; padding: 3px 6px; }
+        input[type=number] { width: 100%; }
+        select { max-width: 100%; }
+        button { cursor: pointer; background: #262c34; }
+        button:hover { background: #303844; }
+        button.on { background: var(--accent); color: #111; border-color: var(--accent); }
+        .dim { color: var(--dim); }
+        .warn { color: var(--warn); }
+        .lights { list-style: none; padding: 0; margin: 4px 0; }
+        .lights li { display: flex; justify-content: space-between; align-items: center; padding: 1px 0; }
+        .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+        kbd { background: #111; border: 1px solid var(--line); border-radius: 3px; padding: 0 4px; font-size: 11px; }
+        #spriteList { max-height: 180px; overflow-y: auto; border: 1px solid var(--line); border-radius: 4px; }
+        #spriteList div { padding: 2px 6px; cursor: pointer; display: flex; justify-content: space-between; }
+        #spriteList div.sel { background: #2c3440; }
+        .palette { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0; }
+        .chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; border: 1px solid var(--line);
+            border-radius: 14px; background: #111419; cursor: grab; user-select: none; touch-action: none; }
+        .chip:active { cursor: grabbing; }
+        .chip.on { border-color: var(--accent); background: #22303a; }
+        .ghost { position: fixed; z-index: 10; pointer-events: none; transform: translate(-50%, -50%); opacity: .9; }
+    </style>
+</head>
+<body>
+    <div id="stage">
+        <canvas id="view"></canvas>
+        <div id="status"></div>
+    </div>
+    <aside>
+        <h1>Vehicle Atlas Editor</h1>
+        <div class="row">
+            <select id="atlasSel"></select>
+            <label class="row" style="margin:0"><input type="file" id="fileIn" accept="image/*" hidden><button id="openBtn">Kép…</button></label>
+        </div>
+        <div class="row">
+            <button id="saveBtn">Mentés</button>
+            <button id="exportBtn">Export JSON</button>
+            <label class="row" style="margin:0"><input type="file" id="importIn" accept=".json" hidden><button id="importBtn">Import</button></label>
+        </div>
+        <div id="saveMsg" class="dim"></div>
+
+        <section>
+            <h2>Eszköz</h2>
+            <div class="row">
+                <button data-mode="box" class="on">Doboz <kbd>B</kbd></button>
+                <button data-mode="light">Lámpa <kbd>L</kbd></button>
+                <button data-mode="coupling">Csatlakozó <kbd>C</kbd></button>
+            </div>
+            <h2>Lámpák <span class="dim">– húzd rá egy kocsira</span></h2>
+            <div id="lampPalette" class="palette"></div>
+            <label class="row"><input type="checkbox" id="mirror" checked> tükrözve (bal+jobb)</label>
+            <div class="dim">Lerakott lámpa: húzással mozgatható (a párja tükrözve követi) · <kbd>Alt</kbd>+klikk: törlés</div>
+            <div class="row">
+                <button id="detectBtn">Automatikus felismerés</button>
+                <label class="row" style="margin:0" title="Átlátszóság küszöb a felismeréshez">α≥ <input type="number" id="alphaThr" value="200" min="1" max="255" style="width:60px"></label>
+            </div>
+            <div class="dim">Görgő: zoom · jobb gomb / szóköz+húzás: mozgatás · <kbd>Del</kbd>: törlés · <kbd>↑↓←→</kbd>: eleje iránya · <kbd>Tab</kbd>: következő</div>
+        </section>
+
+        <section>
+            <h2>Sprite-ok <span id="spriteCount" class="dim"></span></h2>
+            <div id="spriteList"></div>
+        </section>
+
+        <section id="spritePanel" hidden>
+            <h2 id="selTitle">Kijelölt sprite</h2>
+            <div class="row">Kijelöl:
+                <button id="selRowBtn" title="A kijelölttel egy sorban lévő összes sprite">egész sor</button>
+                <button id="selTypeBtn" title="Minden ugyanilyen típusú sprite">azonos típus</button>
+            </div>
+            <div class="dim"><kbd>Shift</kbd>/<kbd>Ctrl</kbd>+klikk: hozzáad / elvesz · <kbd>Shift</kbd>+húzás üres helyen: kijelölő keret</div>
+            <div class="row">Típus:
+                <select id="spriteType"></select>
+                <button id="newTypeBtn" title="Új típus a kijelölt alapján">+ új típus</button>
+            </div>
+            <div class="row">Eleje:
+                <button data-front="up">↑</button><button data-front="down">↓</button>
+                <button data-front="left">←</button><button data-front="right">→</button>
+            </div>
+            <div id="fitInfo" class="dim"></div>
+            <div class="grid2">
+                <label>x <input type="number" id="sx"></label><label>y <input type="number" id="sy"></label>
+                <label>szél. <input type="number" id="sw"></label><label>mag. <input type="number" id="sh"></label>
+            </div>
+            <h2>Lámpák</h2>
+            <ul id="lightList" class="lights"></ul>
+            <div class="row"><button id="copyLightsBtn">Lámpák másolása a típus többi sprite-jára</button></div>
+        </section>
+
+        <section id="typePanel" hidden>
+            <h2>Típus: <span id="typeName"></span></h2>
+            <div class="grid2">
+                <label>név <input id="tName"></label>
+                <label>fajta <select id="tKind">
+                    <option value="car">személyautó</option><option value="van">furgon</option>
+                    <option value="bus">busz</option><option value="lorry">teherautó (merev)</option>
+                    <option value="tractor">nyerges vontató</option><option value="trailer">félpótkocsi (vontatmány)</option>
+                </select></label>
+                <label>hossz m <input type="number" step="0.05" id="tLength"></label>
+                <label>szélesség m <input type="number" step="0.05" id="tWidth"></label>
+                <label id="lblWheelbase">tengelytáv m <input type="number" step="0.05" id="tWheelbase"></label>
+                <label>nyomtáv m <input type="number" step="0.05" id="tTrack"></label>
+                <label id="lblAxles" hidden>tengelyek (m, + = előre) <input id="tAxles" placeholder="-3.9,-5.2,-6.5"></label>
+                <label id="lblCoupling" hidden><span id="couplingLabel">csatlakozó</span> m <input type="number" step="0.05" id="tCoupling"></label>
+            </div>
+            <div class="dim" id="typeHelp"></div>
+        </section>
+    </aside>
+    <script type="module" src="atlas-editor.js"></script>
+</body>
+</html>
