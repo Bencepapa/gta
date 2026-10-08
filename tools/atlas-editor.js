@@ -23,7 +23,18 @@ const canvas = $('view'), ctx = canvas.getContext('2d');
 
 // ---------- default vehicle types (from the game's presets, plus articulated lorries) ----------
 const KIND_OF_STYLE = { car: 'car', sport: 'car', wagon: 'car', van: 'van', bus: 'bus', lorry: 'lorry' };
+// Plants: circles, no front, no lamps; size comes from the pixels in the game.
+const FLORA_KINDS = new Set(['tree', 'bush', 'bare']);
+const isFloraAtlas = () => /flora|plant|tree|noveny/i.test(atlasName);
+const isFlora = (s) => s.shape === 'circle' || FLORA_KINDS.has(data.types[s.type]?.kind);
+function floraTypes() {
+    return {
+        tree: { name: 'Nagy fa', kind: 'tree' }, smalltree: { name: 'Kis fa', kind: 'tree' },
+        bush: { name: 'Bokor', kind: 'bush' }, bare: { name: 'Kopasz fa', kind: 'bare' },
+    };
+}
 function defaultTypes() {
+    if (isFloraAtlas()) return floraTypes();
     const t = {};
     for (const [id, p] of Object.entries(PRESETS)) {
         if (id === 'original') continue;
@@ -117,11 +128,16 @@ function draw() {
         const isSel = s === sel, isPicked = picked.has(s);
         ctx.lineWidth = (isSel ? 2 : isPicked ? 2 : 1) * px * (devicePixelRatio || 1);
         ctx.strokeStyle = isSel ? '#8ce6c5' : isPicked ? '#4dd0ff' : s.type ? 'rgba(140,230,197,.55)' : 'rgba(255,176,32,.8)';
-        ctx.strokeRect(s.x, s.y, s.w, s.h);
-        // front marker: a small triangle on the front edge
-        const tip = toImg(s, 0.5, 0), b1 = toImg(s, 0.42, 0.18), b2 = toImg(s, 0.42, -0.18);
-        ctx.fillStyle = isSel ? '#8ce6c5' : 'rgba(140,230,197,.7)';
-        ctx.beginPath(); ctx.moveTo(tip.x, tip.y); ctx.lineTo(b1.x, b1.y); ctx.lineTo(b2.x, b2.y); ctx.closePath(); ctx.fill();
+        if (s.shape === 'circle') {
+            ctx.beginPath(); ctx.arc(s.x + s.w / 2, s.y + s.h / 2, s.w / 2, 0, 7); ctx.stroke();
+            if (isSel) { ctx.setLineDash([3 * px, 3 * px]); ctx.strokeRect(s.x, s.y, s.w, s.h); ctx.setLineDash([]); }
+        } else ctx.strokeRect(s.x, s.y, s.w, s.h);
+        if (!isFlora(s)) {
+            // front marker: a small triangle on the front edge
+            const tip = toImg(s, 0.5, 0), b1 = toImg(s, 0.42, 0.18), b2 = toImg(s, 0.42, -0.18);
+            ctx.fillStyle = isSel ? '#8ce6c5' : 'rgba(140,230,197,.7)';
+            ctx.beginPath(); ctx.moveTo(tip.x, tip.y); ctx.lineTo(b1.x, b1.y); ctx.lineTo(b2.x, b2.y); ctx.closePath(); ctx.fill();
+        }
         if (isSel) drawDetails(s, px);
         else for (const L of s.lights) drawLight(s, L, px * 3);
     }
@@ -144,7 +160,7 @@ function drawLight(s, L, r) {
 
 function drawDetails(s, px) {
     const type = data.types[s.type];
-    if (type) {
+    if (type && !isFlora(s)) {
         // wheels of the type, to scale
         const wl = 0.85, ww = 0.32;
         ctx.fillStyle = 'rgba(0,0,0,.55)';
@@ -200,10 +216,15 @@ function hitHandle(s, p) {
     const r = 7 / view.scale;
     return handles(s).find((h) => Math.abs(h.x - p.x) < r && Math.abs(h.y - p.y) < r);
 }
+function insideShape(s, p) {
+    if (s.shape !== 'circle') return inside(s, p);
+    const r = s.w / 2;
+    return Math.hypot(p.x - (s.x + r), p.y - (s.y + r)) <= r;
+}
 function hitSprite(p) {
     // smallest box under the cursor wins (boxes can overlap)
     let best = null;
-    for (const s of data.sprites) if (inside(s, p) && (!best || s.w * s.h < best.w * best.h)) best = s;
+    for (const s of data.sprites) if (insideShape(s, p) && (!best || s.w * s.h < best.w * best.h)) best = s;
     return best;
 }
 function hitLight(s, p) {
@@ -290,7 +311,11 @@ canvas.addEventListener('pointermove', (e) => {
         let x0 = start.x, y0 = start.y, x1 = start.x + start.w, y1 = start.y + start.h;
         if (h.hx < 0) x0 = p.x; else x1 = p.x;
         if (h.hy < 0) y0 = p.y; else y1 = p.y;
-        Object.assign(s, rectInt(rectOf({ x: x0, y: y0 }, { x: x1, y: y1 })));
+        if (s.shape === 'circle') {
+            const size = Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0));
+            const ax = h.hx < 0 ? start.x + start.w : start.x, ay = h.hy < 0 ? start.y + start.h : start.y;
+            Object.assign(s, rectInt({ x: h.hx < 0 ? ax - size : ax, y: h.hy < 0 ? ay - size : ay, w: size, h: size }));
+        } else Object.assign(s, rectInt(rectOf({ x: x0, y: y0 }, { x: x1, y: y1 })));
         drag.moved = true;
     }
     draw();
@@ -305,7 +330,7 @@ canvas.addEventListener('pointerup', () => {
     } else if (drag?.kind === 'new') {
         const r = rectInt(rectOf(drag.a, drag.b));
         if (r.w > 4 && r.h > 4) {
-            const s = newSprite(r);
+            const s = newSprite(isFloraAtlas() ? circleAround({ ...r, w: r.w - 6, h: r.h - 6 }) : r);
             data.sprites.push(s);
             select(s);
             changed();
@@ -362,7 +387,13 @@ function centreOn(s) {
 }
 
 // ---------- editing ----------
+// Square box of the circle around a detected blob (plants).
+function circleAround(r) {
+    const size = Math.max(r.w, r.h) + 6;
+    return { x: Math.round(r.x + r.w / 2 - size / 2), y: Math.round(r.y + r.h / 2 - size / 2), w: size, h: size, shape: 'circle' };
+}
 function newSprite(r) {
+    if (r.shape === 'circle') return { id: `s${nextId++}`, ...r, front: 'up', type: r.w >= 116 ? 'tree' : r.w >= 72 ? 'smalltree' : 'bush', lights: [] };
     return { id: `s${nextId++}`, ...r, front: 'up', type: guessType(r), lights: [] };
 }
 // A first guess from the proportions; you'll correct it anyway.
@@ -487,7 +518,7 @@ $('detectBtn').addEventListener('click', () => {
             }
         }
         const r = { x: x0 * step, y: y0 * step, w: (x1 - x0 + 1) * step, h: (y1 - y0 + 1) * step };
-        if (r.w >= 16 && r.h >= 16 && n > 60) found.push(r);
+        if (r.w >= 16 && r.h >= 16 && n > 60) found.push(isFloraAtlas() ? circleAround(r) : r);
     }
     let added = 0;
     for (const r of found) {
@@ -559,9 +590,12 @@ function refreshPanels() {
     ts.replaceChildren(new Option('— nincs —', ''), ...Object.entries(data.types).map(([id, t]) => new Option(`${t.name} (${id})`, id)));
     ts.value = sel.type ?? '';
     document.querySelectorAll('[data-front]').forEach((b) => b.classList.toggle('on', b.dataset.front === sel.front));
+    $('frontRow').hidden = isFlora(sel);
     for (const k of ['x', 'y', 'w', 'h']) $('s' + k).value = sel[k];
     const type = data.types[sel.type];
-    if (type) {
+    if (isFlora(sel)) {
+        $('fitInfo').textContent = `Növény · átmérő ${sel.w} px`;
+    } else if (type) {
         const spriteRatio = lenPx(sel) / widPx(sel), typeRatio = type.length / type.width;
         const off = (spriteRatio / typeRatio - 1) * 100;
         const mpp = type.length / lenPx(sel);
@@ -591,12 +625,16 @@ function refreshPanels() {
         $('tTrack').value = type.track;
         $('tAxles').value = (type.axles ?? []).join(', ');
         $('tCoupling').value = type.coupling ?? '';
+        const plant = FLORA_KINDS.has(type.kind);
+        for (const id of ['tLength', 'tWidth', 'tTrack']) $(id).closest('label').hidden = plant;
         const artic = type.kind === 'tractor' || type.kind === 'trailer';
         $('lblCoupling').hidden = !artic;
         $('couplingLabel').textContent = type.kind === 'trailer' ? 'királycsap' : 'nyeregszerkezet';
-        $('lblAxles').hidden = type.kind === 'car';
-        $('lblWheelbase').hidden = type.kind === 'trailer';
-        $('typeHelp').textContent = type.kind === 'trailer'
+        $('lblAxles').hidden = type.kind === 'car' || plant;
+        $('lblWheelbase').hidden = type.kind === 'trailer' || plant;
+        $('typeHelp').textContent = plant
+            ? 'Növény: a játékban a mérete a pixelekből jön (ugyanazzal a léptékkel, mint a járműveké).'
+            : type.kind === 'trailer'
             ? 'Félpótkocsi: nincs saját kormányzott tengelye; a királycsapnál kapcsolódik a vontató nyeregszerkezetéhez. Tengelyek: méter a középponttól, negatív = hátra.'
             : type.kind === 'tractor'
                 ? 'Nyerges vontató: a csatlakozó a nyeregszerkezet helye (méter a középponttól). A "Csatlakozó" eszközzel sprite-onként is megjelölhető.'

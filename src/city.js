@@ -132,5 +132,25 @@ export function buildCity(seed = 1996) {
         crates.push(crate(x, y, 0.5, r() * 3));
     }
 
-    return { statics, crates, parked, blocks, rand: r };
+    return { statics, crates, parked, blocks, decor: buildDecor(blocks, statics), rand: r };
+}
+
+// Bushes: decoration only (no collision), in parks and around houses.
+// Uses its own random numbers so it doesn't change the rest of the city.
+function buildDecor(blocks, statics) {
+    const r = rng(77), out = [];
+    const houses = statics.filter((s) => s.kind === 'house');
+    const clear = (x, y, m) => !houses.some((h) => Math.abs(x - h.body.pos.x) < h.halfL + m && Math.abs(y - h.body.pos.y) < h.halfW + m);
+    for (const b of blocks) {
+        if (b.type === 'lot') continue;
+        const ix0 = b.x0 + SIDEWALK + 1, iy0 = b.y0 + SIDEWALK + 1, size = b.x1 - b.x0 - 2 * SIDEWALK - 2;
+        const n = b.type === 'park' ? 10 + Math.floor(r() * 8) : 4 + Math.floor(r() * 5);
+        for (let k = 0, tries = 0; k < n && tries < n * 8; tries++) {
+            const x = ix0 + r() * size, y = iy0 + r() * size;
+            if (!clear(x, y, 1.5)) continue;
+            out.push({ x, y, rot: r() * Math.PI * 2 });
+            k++;
+        }
+    }
+    return out;
 }

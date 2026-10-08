@@ -96,7 +96,7 @@
                 <select id="spriteType"></select>
                 <button id="newTypeBtn" title="Új típus a kijelölt alapján">+ új típus</button>
             </div>
-            <div class="row">Eleje:
+            <div class="row" id="frontRow">Eleje:
                 <button data-front="up">↑</button><button data-front="down">↓</button>
                 <button data-front="left">←</button><button data-front="right">→</button>
             </div>
@@ -118,6 +118,7 @@
                     <option value="car">személyautó</option><option value="van">furgon</option>
                     <option value="bus">busz</option><option value="lorry">teherautó (merev)</option>
                     <option value="tractor">nyerges vontató</option><option value="trailer">félpótkocsi (vontatmány)</option>
+                    <option value="tree">fa</option><option value="bush">bokor</option><option value="bare">kopasz fa</option>
                 </select></label>
                 <label>hossz m <input type="number" step="0.05" id="tLength"></label>
                 <label>szélesség m <input type="number" step="0.05" id="tWidth"></label>

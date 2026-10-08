@@ -1,7 +1,7 @@
 import { v2, add, sub, mul, dot, len, fromAngle } from './vec.js';
 import { Car } from './car.js';
 import { Driver } from './ai.js';
-import { buildCity, setSpritePool, nodePos, neighbours, randomVehicle, PITCH, ROAD, LANE, N } from './city.js';
+import { buildCity, setSpritePool, rng, nodePos, neighbours, randomVehicle, PITCH, ROAD, LANE, N } from './city.js';
 import { collideAll } from './collide.js';
 import { PRESETS, TRAFFIC_MIX } from './vehicles.js';
 import { createDebugPanel, isTyping } from './debug.js';
@@ -10,7 +10,7 @@ import { Horn } from './horn.js';
 import { TouchControls } from './touch.js';
 import { Junctions, freeAgent, boxAt, nodeKey, axisOf, STOP_LINE, heldByRules } from './junctions.js';
 import { SpatialGrid } from './spatial.js';
-import { loadVehicleSprites, drawSprite, modelConfig } from './sprites.js';
+import { loadVehicleSprites, drawSprite, modelConfig, loadFlora, drawPlant } from './sprites.js';
 import { Violations } from './violations.js';
 
 const canvas = document.getElementById('view');
@@ -33,6 +33,19 @@ const CRATE_DRAG = 3; // 1/s, sliding friction for loose crates
 const vehicleSprites = await loadVehicleSprites().catch(() => null);
 setSpritePool(vehicleSprites);
 const city = buildCity();
+
+// Trees and bushes from the plant atlas (plain circles if it's missing).
+// Park trees are mostly leafy, some bare; their own random numbers keep
+// the choice the same every time.
+const flora = await loadFlora().catch(() => null);
+{
+    const r = rng(99);
+    for (const e of city.statics) if (e.kind === 'tree') {
+        e.plant = flora?.pick(r() < 0.15 ? 'bare' : 'tree', r) ?? null;
+        e.rot = r() * Math.PI * 2;
+    }
+    for (const d of city.decor) d.plant = flora?.pick('bush', r) ?? null;
+}
 
 // Road surface: the asphalt texture, tiled at the same scale as the vehicle
 // atlas (~22.4 px per metre), so a 128 px tile covers about 5.7 m.
@@ -593,6 +606,13 @@ function draw(frameDt) {
     for (const [w, p] of lastSkid) { ctx.moveTo(p.x, p.y); ctx.lineTo(w.world.x, w.world.y); }
     ctx.stroke();
 
+    const inView = (x, y, r) => Math.abs(x - cam.x) < vx + r && Math.abs(y - cam.y) < vy + r;
+    for (const d of city.decor) if (d.plant && inView(d.x, d.y, d.plant.radius)) {
+        ctx.fillStyle = 'rgba(0,0,0,0.25)';
+        ctx.beginPath(); ctx.arc(d.x + 0.35, d.y - 0.35, d.plant.radius * 0.85, 0, 7); ctx.fill();
+        drawPlant(ctx, d.plant, d.x, d.y, d.rot);
+    }
+
     for (const c of crates) if (visible(c)) {
         box(c, '#a87b4a', '#5e4126', 0.1);
         ctx.save();
@@ -610,7 +630,7 @@ function draw(frameDt) {
     for (const c of cars) if (visible(c)) drawCar(c);
 
     // Buildings and trees sit "above" the street, like the GTA camera.
-    for (const e of statics) if (visible(e)) {
+    for (const e of statics) if (e.kind === 'tree' ? inView(e.body.pos.x, e.body.pos.y, e.plant?.radius ?? e.canopy) : visible(e)) {
         const p = e.body.pos;
         if (e.kind === 'house') {
             ctx.fillStyle = 'rgba(0,0,0,0.35)';
@@ -622,6 +642,10 @@ function draw(frameDt) {
             if (e.halfL >= e.halfW) { ctx.moveTo(p.x - e.halfL + e.halfW, p.y); ctx.lineTo(p.x + e.halfL - e.halfW, p.y); }
             else { ctx.moveTo(p.x, p.y - e.halfW + e.halfL); ctx.lineTo(p.x, p.y + e.halfW - e.halfL); }
             ctx.stroke();
+        } else if (e.kind === 'tree' && e.plant) {
+            ctx.fillStyle = 'rgba(0,0,0,0.3)';
+            ctx.beginPath(); ctx.arc(p.x + 0.9, p.y - 0.9, e.plant.radius * 0.8, 0, 7); ctx.fill();
+            drawPlant(ctx, e.plant, p.x, p.y, e.rot);
         } else if (e.kind === 'tree') {
             ctx.fillStyle = 'rgba(0,0,0,0.3)';
             ctx.beginPath(); ctx.arc(p.x + 0.8, p.y - 0.8, e.canopy, 0, 7); ctx.fill();

@@ -147,3 +147,55 @@ export function drawSprite(ctx, model, length, width) {
     ctx.drawImage(image, s.x, s.y, s.w, s.h, s.x, s.y, s.w, s.h);
     ctx.restore();
 }
+
+// ---------- plants ----------
+// Trees and bushes from concept/flora.json (circles marked in the atlas
+// editor). Each is cut out once into its own small canvas with a soft
+// circular edge, so neighbours in the atlas never bleed in and drawing is a
+// single drawImage. Sizes come from the pixels, at the vehicles' scale.
+export class Flora {
+    constructor(byKind) { this.byKind = byKind; }
+    // kind: 'tree' | 'bush' | 'bare'
+    pick(kind, r = Math.random) {
+        const list = this.byKind[kind];
+        return list?.length ? list[Math.floor(r() * list.length)] : null;
+    }
+}
+
+export async function loadFlora(pxPerM = 22.4) {
+    const res = await fetch('concept/flora.json', { cache: 'no-store' });
+    if (!res.ok) return null;
+    const doc = await res.json();
+    const img = new Image();
+    img.src = `concept/${doc.atlas}`;
+    await img.decode();
+    const byKind = {};
+    for (const s of doc.sprites) {
+        const kind = doc.types[s.type]?.kind ?? 'tree';
+        const c = document.createElement('canvas');
+        c.width = s.w;
+        c.height = s.h;
+        const g = c.getContext('2d');
+        g.drawImage(img, s.x, s.y, s.w, s.h, 0, 0, s.w, s.h);
+        if (s.shape === 'circle') {
+            const r = s.w / 2, edge = g.createRadialGradient(r, r, r * 0.85, r, r, r);
+            edge.addColorStop(0, '#000');
+            edge.addColorStop(1, 'rgba(0,0,0,0)');
+            g.globalCompositeOperation = 'destination-in';
+            g.fillStyle = edge;
+            g.fillRect(0, 0, s.w, s.h);
+        }
+        (byKind[kind] ??= []).push({ canvas: c, radius: Math.max(s.w, s.h) / 2 / pxPerM });
+    }
+    return new Flora(byKind);
+}
+
+// Draw a plant centred at (x, y) (world metres), turned by rot.
+export function drawPlant(ctx, plant, x, y, rot) {
+    const d = plant.radius * 2;
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(rot);
+    ctx.drawImage(plant.canvas, -d / 2, -d / 2, d, d);
+    ctx.restore();
+}
